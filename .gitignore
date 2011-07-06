@@ -2,3 +2,4 @@
 /MusicBeeAPI/bin
 /MusicBeeAPI/obj
 *.csproj.user
+*.csproj.vs10x
