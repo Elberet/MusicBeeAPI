@@ -1,0 +1,4 @@
+*.suo
+/MusicBeeAPI/bin
+/MusicBeeAPI/obj
+*.csproj.user

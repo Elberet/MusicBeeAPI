@@ -1,0 +1,14 @@
+MusicBeeAPI - an abstraction layer bringing the MusicBee plugin API
+closer to the Microsoft(R) .NET(tm) design principles.
+
+Copyright (c) Jens Maier 2011
+
+Distributed under the Creative Commons BY 3.0 license.
+http://creativecommons.org/licenses/by/3.0/
+
+Based on the MusicBee plugin API (c) Steven Mayall 2008-2011.
+http://getmusicbee.com/
+
+This program code is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
