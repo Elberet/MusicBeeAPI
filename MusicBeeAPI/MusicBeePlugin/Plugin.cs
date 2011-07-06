@@ -150,6 +150,7 @@ namespace MusicBeePlugin
                     currentInstance = this;
                     pluginClosed = true;
                     apiWrapper.RaisePluginClosed(reason);
+                    frontend.Dispose();
                 }
             }
         }
