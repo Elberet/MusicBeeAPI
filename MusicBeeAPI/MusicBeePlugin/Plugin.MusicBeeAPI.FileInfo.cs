@@ -16,6 +16,7 @@
 using System;
 using System.IO;
 using System.Drawing;
+using System.Collections.Generic;
 
 namespace MusicBeePlugin
 {
@@ -23,7 +24,7 @@ namespace MusicBeePlugin
     {
         partial class MusicBeeAPI
         {
-            private class FileInfo : IFileInfo
+            private partial class FileInfo : IFileInfo
             {
                 private MusicBeeApiInterface mb;
                 private Uri uri;
@@ -78,6 +79,30 @@ namespace MusicBeePlugin
                 // ........................................................................
 
                 #region Tags
+
+                // Multi Tags
+                private readonly object syncRoot = new object();
+                private MultiTagList multiArtists;
+                private MultiTagList multiComposers;
+
+                public IList<string> Artists {
+                    get { return getSingleton(MetaDataType.MultiArtist, ref multiArtists); }
+                }
+
+                public IList<string> Composers {
+                    get { return getSingleton(MetaDataType.MultiComposer, ref multiComposers); }
+                }
+
+                private MultiTagList getSingleton(MetaDataType type, ref MultiTagList list) {
+                    if (list == null) {
+                        lock (syncRoot) {
+                            if (list == null) {
+                                list = new MultiTagList(this, type);
+                            }
+                        }
+                    }
+                    return list;
+                }
 
                 // Tags
                 public string Album {
@@ -243,6 +268,8 @@ namespace MusicBeePlugin
                 }
 
                 public void CommitTags() {
+                    if (multiArtists != null) multiArtists.Commit();
+                    if (multiComposers != null) multiComposers.Commit();
                     mb.Library_CommitTagsToFile(uri.OriginalString);
                 }
 

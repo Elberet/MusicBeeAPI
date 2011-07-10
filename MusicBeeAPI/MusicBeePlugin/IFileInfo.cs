@@ -15,6 +15,7 @@
  
 using System;
 using System.Drawing;
+using System.Collections.Generic;
 namespace MusicBeePlugin
 {
     /// <summary>
@@ -88,10 +89,10 @@ namespace MusicBeePlugin
         string this[MetaDataType tag] { get; set; }
         string Album { get; set; }
         string AlbumArtist { get; set; }
-        string Artist { get; set; } // TODO: multi artist
+        string Artist { get; set; }
         string Artwork { get; set; }
         string Comment { get; set; }
-        string Composer { get; set; } // TODO: multi composer
+        string Composer { get; set; }
         string Conductor { get; set; }
         string Custom1 { get; set; }
         string Custom2 { get; set; }
@@ -121,6 +122,9 @@ namespace MusicBeePlugin
         string TrackNo { get; set; }
         string TrackTitle { get; set; }
         string Year { get; set; }
+
+        IList<string> Artists { get; }
+        IList<string> Composers { get; }
 
         #endregion
     }
