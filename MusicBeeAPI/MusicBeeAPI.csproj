@@ -8,8 +8,8 @@
     <ProjectGuid>{A73493E7-455B-499E-ACAA-9A3856714198}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PluginTemplate</RootNamespace>
-    <AssemblyName>MB_PluginTemplate</AssemblyName>
+    <RootNamespace>MusicBeePlugin</RootNamespace>
+    <AssemblyName>MusicBeeAPI</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -37,7 +37,8 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PluginTemplate.cs" />
+    <Compile Include="MusicBeePlugin\Plugin.MusicBeeAPI.MultiTagList.cs" />
+    <None Include="PluginTemplate.cs" />
     <Compile Include="MusicBeePlugin\IFileInfo.cs" />
     <Compile Include="MusicBeePlugin\IMusicBeeAPI.cs" />
     <Compile Include="MusicBeePlugin\IPluginFrontend.cs" />
