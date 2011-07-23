@@ -67,9 +67,27 @@ namespace MusicBeePlugin
         event PluginEventHandler<NotificationEventArgs> PlayStateChanged;
 
         /// <summary>
-        /// Event raised when the corresponding MusicBee notification arrives.
-        /// This notification is currently not being sent by MusicBee, it's use
-        /// is unclear.
+        /// Document me.
+        /// </summary>
+        event PluginEventHandler<NotificationEventArgs> RatingChanged;
+
+        /// <summary>
+        /// Document me.
+        /// </summary>
+        event PluginEventHandler<NotificationEventArgs> PlayCountersChanged;
+
+        /// <summary>
+        /// Event raised when tags of a file have been changed by the user but
+        /// before they have been committed to the database or file.<para/>
+        /// Only delivered if TagEvents in the plugin frontend attribute is true.
+        /// </summary>
+        event PluginEventHandler<NotificationEventArgs> TagsChanging;
+
+        /// <summary>
+        /// Event raised when the tags of a file have been changed and successfully
+        /// committed to the database and/or file. The event arguments object may
+        /// contain hints as to which tags have been modified.<para/>
+        /// Only delivered if TagEvents in the plugin frontend attribute is true.
         /// </summary>
         event PluginEventHandler<NotificationEventArgs> TagsChanged;
 

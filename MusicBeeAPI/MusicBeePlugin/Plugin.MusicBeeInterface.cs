@@ -115,7 +115,8 @@ namespace MusicBeePlugin
         {
             StartupOnly = 0x0,
             PlayerEvents = 0x1,
-            DataStreamEvents = 0x2
+            DataStreamEvents = 0x2,
+            TagEvents = 0x4
         }
 
         private enum SkinElement
@@ -212,7 +213,10 @@ namespace MusicBeePlugin
         NowPlayingListChanged = 7,
         NowPlayingArtworkReady = 8,
         NowPlayingLyricsReady = 9,
-        TagsChanged = 10
+        TagsChanging = 10,
+        TagsChanged = 11,
+        RatingChanged = 12,
+        PlayCountersChanged = 13
     }
 
     public enum PluginCloseReason

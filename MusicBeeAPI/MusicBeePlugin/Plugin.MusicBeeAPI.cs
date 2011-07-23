@@ -50,7 +50,10 @@ namespace MusicBeePlugin
             public event PluginEventHandler<NotificationEventArgs> NowPlayingListChanging;
             public event PluginEventHandler<NotificationEventArgs> NowPlayingListChanged;
             public event PluginEventHandler<NotificationEventArgs> NowPlayingLyricsReady;
+            public event PluginEventHandler<NotificationEventArgs> RatingChanged;
+            public event PluginEventHandler<NotificationEventArgs> PlayCountersChanged;
             public event PluginEventHandler<NotificationEventArgs> TagsChanged;
+            public event PluginEventHandler<NotificationEventArgs> TagsChanging;
             public event PluginEventHandler<NotificationEventArgs> VolumeLevelChanged;
             public event PluginEventHandler<NotificationEventArgs> VolumeMuteChanged;
             public event PluginEventHandler<NotificationEventArgs> PluginStartup;
@@ -71,77 +74,91 @@ namespace MusicBeePlugin
             }
 
             public void ProcessNotification(string sourceFileUrl, NotificationType type) {
+                if (NotificationReceived != null) {
+                    NotificationReceived(new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
+                }
+                switch (type) {
+                    case NotificationType.PlayStateChanged:
+                        if (PlayStateChanged != null) PlayStateChanged(
+                            new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
+                        break;
+
+                    case NotificationType.TrackChanged:
+                        if (TrackChanged != null) TrackChanged(
+                            new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
+                        break;
+
+                    case NotificationType.AutoDjStarted:
+                        if (AutoDjStarted != null) AutoDjStarted(
+                            new NotificationEventArgsImpl(this) { EventType = type });
+                        break;
+
+                    case NotificationType.AutoDjStopped:
+                        if (AutoDjStopped != null) AutoDjStopped(
+                            new NotificationEventArgsImpl(this) { EventType = type });
+                        break;
+
+                    case NotificationType.NowPlayingArtworkReady:
+                        if (NowPlayingArtworkReady != null) NowPlayingArtworkReady(
+                            new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
+                        break;
+
+                    case NotificationType.NowPlayingListChanged:
+                        if (NowPlayingListChanging != null) NowPlayingListChanging(
+                            new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
+                        if (NowPlayingListChanged != null) NowPlayingListChanged(
+                            new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
+                        break;
+
+                    case NotificationType.NowPlayingLyricsReady:
+                        if (NowPlayingLyricsReady != null) NowPlayingLyricsReady(
+                            new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
+                        break;
+
+                    case NotificationType.PluginStartup:
+                        if (PluginStartup != null) PluginStartup(
+                            new NotificationEventArgsImpl(this) { EventType = type });
+                        break;
+
+                    case NotificationType.TagsChanging:
+                        if (TagsChanging != null) TagsChanging(
+                            new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
+                        break;
+
+                    case NotificationType.RatingChanged:
+                        if (RatingChanged != null) RatingChanged(
+                            new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
+                        break;
+
+                    case NotificationType.PlayCountersChanged:
+                        if (PlayCountersChanged != null) PlayCountersChanged(
+                            new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
+                        break;
+
+                    case NotificationType.TagsChanged:
+                        if (TagsChanged != null) TagsChanged(
+                            new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
+                        break;
+
+                    case NotificationType.VolumeLevelChanged:
+                        if (VolumeLevelChanged != null) VolumeLevelChanged(
+                            new NotificationEventArgsImpl(this) { EventType = type });
+                        break;
+
+                    case NotificationType.VolumeMuteChanged:
+                        if (VolumeMuteChanged != null) VolumeMuteChanged(
+                            new NotificationEventArgsImpl(this) { EventType = type });
+                        break;
+                }
+            }
+
+            public void HandleException(Exception e) {
                 try {
-                    if (NotificationReceived != null) {
-                        NotificationReceived(new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
-                    }
-                    switch (type) {
-                        case NotificationType.PlayStateChanged:
-                            if (PlayStateChanged != null) PlayStateChanged(
-                                new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
-                            break;
-
-                        case NotificationType.TrackChanged:
-                            if (TrackChanged != null) TrackChanged(
-                                new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
-                            break;
-
-                        case NotificationType.AutoDjStarted:
-                            if (AutoDjStarted != null) AutoDjStarted(
-                                new NotificationEventArgsImpl(this) { EventType = type });
-                            break;
-
-                        case NotificationType.AutoDjStopped:
-                            if (AutoDjStopped != null) AutoDjStopped(
-                                new NotificationEventArgsImpl(this) { EventType = type });
-                            break;
-
-                        case NotificationType.NowPlayingArtworkReady:
-                            if (NowPlayingArtworkReady != null) NowPlayingArtworkReady(
-                                new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
-                            break;
-
-                        case NotificationType.NowPlayingListChanged:
-                            if (NowPlayingListChanging != null) NowPlayingListChanging(
-                                new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
-                            if (NowPlayingListChanged != null) NowPlayingListChanged(
-                                new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
-                            break;
-
-                        case NotificationType.NowPlayingLyricsReady:
-                            if (NowPlayingLyricsReady != null) NowPlayingLyricsReady(
-                                new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
-                            break;
-
-                        case NotificationType.PluginStartup:
-                            if (PluginStartup != null) PluginStartup(
-                                new NotificationEventArgsImpl(this) { EventType = type });
-                            break;
-
-                        case NotificationType.TagsChanged:
-                            if (TagsChanged != null) TagsChanged(
-                                new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
-                            break;
-
-                        case NotificationType.VolumeLevelChanged:
-                            if (VolumeLevelChanged != null) VolumeLevelChanged(
-                                new NotificationEventArgsImpl(this) { EventType = type });
-                            break;
-
-                        case NotificationType.VolumeMuteChanged:
-                            if (VolumeMuteChanged != null) VolumeMuteChanged(
-                                new NotificationEventArgsImpl(this) { EventType = type });
-                            break;
-                    }
-                } catch (Exception e) {
-                    try {
-                        if (UnhandledException != null) UnhandledException(this,
-                            new UnhandledExceptionEventArgs(e, false));
-                        System.Diagnostics.Debug.Print("\r\nException: {0}\r\n{1}\r\n", e.Message, e.StackTrace);
-                    } catch (Exception e2) {
-                        System.Diagnostics.Debug.Print("\r\nException handler failed while processing an unhandled exception: {0}\r\n{1}\r\n", e2.Message, e2.StackTrace);
-                        System.Diagnostics.Debug.Print("The original exception was: {0}\r\n{1}\r\n", e.Message, e.StackTrace);
-                    }
+                    if (UnhandledException != null) UnhandledException(this,
+                        new UnhandledExceptionEventArgs(e, false));
+                } catch (Exception e2) {
+                    System.Diagnostics.Debug.Print("\r\nException handler failed while processing an unhandled exception: {0}\r\n{1}\r\n", e2.Message, e2.StackTrace);
+                    System.Diagnostics.Debug.Print("The original exception was: {0}\r\n{1}\r\n", e.Message, e.StackTrace);
                 }
             }
 

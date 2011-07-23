@@ -27,7 +27,7 @@ namespace MusicBeePlugin
         private volatile bool pluginClosed = false;
         private readonly object syncRoot = new object();
 
-        private const ReceiveNotificationFlags AllNotifications =
+        private const ReceiveNotificationFlags DefaultNotifications =
             ReceiveNotificationFlags.DataStreamEvents |
             ReceiveNotificationFlags.PlayerEvents |
             ReceiveNotificationFlags.StartupOnly;
@@ -35,6 +35,7 @@ namespace MusicBeePlugin
         [ThreadStatic]
         private static Plugin currentInstance;
 
+        [Obsolete("Static API access is potentially unsafe!")]
         public static IMusicBeeAPI API { get { return currentInstance.apiWrapper; } }
 
         /*
@@ -59,9 +60,13 @@ namespace MusicBeePlugin
             pluginInfo.MinInterfaceVersion = MinInterfaceVersion;
             pluginInfo.MinApiRevision = MinApiRevision;
 
-            pluginInfo.ReceiveNotifications = AllNotifications;
-            pluginInfo.TargetApplication = GetFrontendAttribute().TargetApplication;
-            pluginInfo.Type = GetFrontendAttribute().PluginType;
+            PluginFrontendAttribute frontendInfo = GetFrontendAttribute();
+            pluginInfo.TargetApplication = frontendInfo.TargetApplication;
+            pluginInfo.Type = frontendInfo.PluginType;
+            pluginInfo.ReceiveNotifications = DefaultNotifications;
+            if (frontendInfo.TagEvents) {
+                pluginInfo.ReceiveNotifications |= ReceiveNotificationFlags.TagEvents;
+            }
             VerifyFrontend(pluginInfo);
 
             return pluginInfo;
@@ -125,8 +130,13 @@ namespace MusicBeePlugin
         public bool Configure(IntPtr panelHandle) {
             if (pluginClosed) return false;
             currentInstance = this;
-            return frontend.PluginConfigure(panelHandle == IntPtr.Zero ? null :
-                System.Windows.Forms.Control.FromHandle(panelHandle) as System.Windows.Forms.Panel);
+            try {
+                return frontend.PluginConfigure(panelHandle == IntPtr.Zero ? null :
+                    System.Windows.Forms.Control.FromHandle(panelHandle) as System.Windows.Forms.Panel);
+            } catch (Exception e) {
+                apiWrapper.HandleException(e);
+                return true;
+            }
         }
 
         /*
@@ -136,7 +146,11 @@ namespace MusicBeePlugin
             lock (syncRoot) {
                 if (!pluginClosed) {
                     currentInstance = this;
-                    apiWrapper.RaiseSettingsSaved();
+                    try {
+                        apiWrapper.RaiseSettingsSaved();
+                    } catch (Exception e) {
+                        apiWrapper.HandleException(e);
+                    }
                 }
             }
         }
@@ -149,8 +163,11 @@ namespace MusicBeePlugin
                 if (!pluginClosed) {
                     currentInstance = this;
                     pluginClosed = true;
-                    apiWrapper.RaisePluginClosed(reason);
-                    frontend.Dispose();
+                    try {
+                        apiWrapper.RaisePluginClosed(reason);
+                    } catch (Exception e) {
+                        apiWrapper.HandleException(e);
+                    }
                 }
             }
         }
@@ -162,7 +179,11 @@ namespace MusicBeePlugin
             lock (syncRoot) {
                 if (!pluginClosed) {
                     currentInstance = this;
-                    apiWrapper.RaisePluginUninstalled();
+                    try {
+                        apiWrapper.RaisePluginUninstalled();
+                    } catch (Exception e) {
+                        apiWrapper.HandleException(e);
+                    }
                 }
             }
         }
@@ -174,7 +195,11 @@ namespace MusicBeePlugin
             lock (syncRoot) {
                 if (!pluginClosed) {
                     currentInstance = this;
-                    apiWrapper.ProcessNotification(sourceFileUrl, type);
+                    try {
+                        apiWrapper.ProcessNotification(sourceFileUrl, type);
+                    } catch (Exception e) {
+                        apiWrapper.HandleException(e);
+                    }
                 }
             }
         }
@@ -186,10 +211,14 @@ namespace MusicBeePlugin
             lock (syncRoot) {
                 if (!pluginClosed) {
                     currentInstance = this;
-                    if (frontend is ILyricProvider) {
-                        return ((ILyricProvider) frontend).GetProviders();
-                    } else if (frontend is IArtworkProvider) {
-                        return ((IArtworkProvider) frontend).GetProviders();
+                    try {
+                        if (frontend is ILyricProvider) {
+                            return ((ILyricProvider) frontend).GetProviders();
+                        } else if (frontend is IArtworkProvider) {
+                            return ((IArtworkProvider) frontend).GetProviders();
+                        }
+                    } catch (Exception e) {
+                        apiWrapper.HandleException(e);
                     }
                 }
                 return null;
@@ -203,7 +232,11 @@ namespace MusicBeePlugin
             lock (syncRoot) {
                 if (!pluginClosed) {
                     currentInstance = this;
-                    return ((ILyricProvider) frontend).RetrieveLyrics(sourceFileUrl, artist, trackTitle, album, synchronisedPreferred, provider);
+                    try {
+                        return ((ILyricProvider) frontend).RetrieveLyrics(sourceFileUrl, artist, trackTitle, album, synchronisedPreferred, provider);
+                    } catch (Exception e) {
+                        apiWrapper.HandleException(e);
+                    }
                 }
                 return null;
             }
@@ -216,7 +249,11 @@ namespace MusicBeePlugin
             lock (syncRoot) {
                 if (!pluginClosed) {
                     currentInstance = this;
-                    return ((IArtworkProvider) frontend).RetrieveArtwork(sourceFileUrl, albumArtist, album, provider);
+                    try {
+                        return ((IArtworkProvider) frontend).RetrieveArtwork(sourceFileUrl, albumArtist, album, provider);
+                    } catch (Exception e) {
+                        apiWrapper.HandleException(e);
+                    }
                 }
                 return null;
             }

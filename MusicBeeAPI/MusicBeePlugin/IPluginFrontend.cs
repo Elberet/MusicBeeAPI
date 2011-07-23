@@ -21,7 +21,7 @@ namespace MusicBeePlugin
     /// <summary>
     /// Defines the interface implemented by clients to the extended MusicBee Plugin API.
     /// </summary>
-    public interface IPluginFrontend : IDisposable
+    public interface IPluginFrontend
     {
         /// <summary>
         /// Initializes the plugin frontend. The frontend must return the intended height of its
@@ -73,9 +73,11 @@ namespace MusicBeePlugin
     public class PluginFrontendAttribute : Attribute {
         public string TargetApplication { get; set; }
         public PluginType PluginType { get; set; }
+        public bool TagEvents { get; set; }
         public PluginFrontendAttribute() {
             TargetApplication = "";
             PluginType = PluginType.General;
+            TagEvents = false;
         }
     }
 }
