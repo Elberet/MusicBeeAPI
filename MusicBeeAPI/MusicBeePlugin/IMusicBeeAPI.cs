@@ -274,7 +274,7 @@ namespace MusicBeePlugin
         /// <summary>
         /// Schedules playback to stop after the current file has finished playback.
         /// </summary>
-        void StopAfterCurrent();
+        Boolean StopAfterCurrent { get; set; }
 
         /// <summary>
         /// Gets and sets the repeat mode state.

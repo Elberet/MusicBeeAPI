@@ -79,11 +79,15 @@ namespace MusicBeePlugin
                 }
                 switch (type) {
                     case NotificationType.PlayStateChanged:
+                        if (PlayerState == PlayState.Stopped) {
+                            internalStopAfterCurrent = false;
+                        }
                         if (PlayStateChanged != null) PlayStateChanged(
                             new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
                         break;
 
                     case NotificationType.TrackChanged:
+                        internalStopAfterCurrent = false;
                         if (TrackChanged != null) TrackChanged(
                             new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
                         break;
@@ -116,6 +120,7 @@ namespace MusicBeePlugin
                         break;
 
                     case NotificationType.PluginStartup:
+                        internalStopAfterCurrent = false;
                         if (PluginStartup != null) PluginStartup(
                             new NotificationEventArgsImpl(this) { EventType = type });
                         break;
@@ -221,7 +226,18 @@ namespace MusicBeePlugin
 
             public void PlayNextTrack() { mbApiInterface.Player_PlayNextTrack(); }
             public void PlayPreviousTrack() { mbApiInterface.Player_PlayPreviousTrack(); }
-            public void StopAfterCurrent() { mbApiInterface.Player_StopAfterCurrent(); }
+
+            //public void StopAfterCurrent() { mbApiInterface.Player_StopAfterCurrent(); }
+            private bool internalStopAfterCurrent = false;
+            public Boolean StopAfterCurrent {
+                get { return internalStopAfterCurrent; }
+                set {
+                    if (internalStopAfterCurrent != value) {
+                        mbApiInterface.Player_StopAfterCurrent();
+                        internalStopAfterCurrent = value;
+                    }
+                }
+            }
 
             public bool AutoDj {
                 set {
