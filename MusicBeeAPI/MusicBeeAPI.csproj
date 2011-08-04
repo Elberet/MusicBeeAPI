@@ -37,6 +37,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MusicBeePlugin\MusicBeeException.cs" />
     <Compile Include="MusicBeePlugin\Plugin.MusicBeeAPI.MultiTagList.cs" />
     <None Include="PluginTemplate.cs" />
     <Compile Include="MusicBeePlugin\IFileInfo.cs" />

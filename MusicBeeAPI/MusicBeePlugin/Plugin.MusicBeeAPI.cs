@@ -74,86 +74,90 @@ namespace MusicBeePlugin
             }
 
             public void ProcessNotification(string sourceFileUrl, NotificationType type) {
-                if (NotificationReceived != null) {
-                    NotificationReceived(new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
-                }
-                switch (type) {
-                    case NotificationType.PlayStateChanged:
-                        if (PlayerState == PlayState.Stopped) {
+                try {
+                    if (NotificationReceived != null) {
+                        NotificationReceived(new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
+                    }
+                    switch (type) {
+                        case NotificationType.PlayStateChanged:
+                            if (PlayerState == PlayState.Stopped) {
+                                internalStopAfterCurrent = false;
+                            }
+                            if (PlayStateChanged != null) PlayStateChanged(
+                                new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
+                            break;
+
+                        case NotificationType.TrackChanged:
                             internalStopAfterCurrent = false;
-                        }
-                        if (PlayStateChanged != null) PlayStateChanged(
-                            new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
-                        break;
+                            if (TrackChanged != null) TrackChanged(
+                                new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
+                            break;
 
-                    case NotificationType.TrackChanged:
-                        internalStopAfterCurrent = false;
-                        if (TrackChanged != null) TrackChanged(
-                            new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
-                        break;
+                        case NotificationType.AutoDjStarted:
+                            if (AutoDjStarted != null) AutoDjStarted(
+                                new NotificationEventArgsImpl(this) { EventType = type });
+                            break;
 
-                    case NotificationType.AutoDjStarted:
-                        if (AutoDjStarted != null) AutoDjStarted(
-                            new NotificationEventArgsImpl(this) { EventType = type });
-                        break;
+                        case NotificationType.AutoDjStopped:
+                            if (AutoDjStopped != null) AutoDjStopped(
+                                new NotificationEventArgsImpl(this) { EventType = type });
+                            break;
 
-                    case NotificationType.AutoDjStopped:
-                        if (AutoDjStopped != null) AutoDjStopped(
-                            new NotificationEventArgsImpl(this) { EventType = type });
-                        break;
+                        case NotificationType.NowPlayingArtworkReady:
+                            if (NowPlayingArtworkReady != null) NowPlayingArtworkReady(
+                                new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
+                            break;
 
-                    case NotificationType.NowPlayingArtworkReady:
-                        if (NowPlayingArtworkReady != null) NowPlayingArtworkReady(
-                            new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
-                        break;
+                        case NotificationType.NowPlayingListChanged:
+                            if (NowPlayingListChanging != null) NowPlayingListChanging(
+                                new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
+                            if (NowPlayingListChanged != null) NowPlayingListChanged(
+                                new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
+                            break;
 
-                    case NotificationType.NowPlayingListChanged:
-                        if (NowPlayingListChanging != null) NowPlayingListChanging(
-                            new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
-                        if (NowPlayingListChanged != null) NowPlayingListChanged(
-                            new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
-                        break;
+                        case NotificationType.NowPlayingLyricsReady:
+                            if (NowPlayingLyricsReady != null) NowPlayingLyricsReady(
+                                new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
+                            break;
 
-                    case NotificationType.NowPlayingLyricsReady:
-                        if (NowPlayingLyricsReady != null) NowPlayingLyricsReady(
-                            new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
-                        break;
+                        case NotificationType.PluginStartup:
+                            internalStopAfterCurrent = false;
+                            if (PluginStartup != null) PluginStartup(
+                                new NotificationEventArgsImpl(this) { EventType = type });
+                            break;
 
-                    case NotificationType.PluginStartup:
-                        internalStopAfterCurrent = false;
-                        if (PluginStartup != null) PluginStartup(
-                            new NotificationEventArgsImpl(this) { EventType = type });
-                        break;
+                        case NotificationType.TagsChanging:
+                            if (TagsChanging != null) TagsChanging(
+                                new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
+                            break;
 
-                    case NotificationType.TagsChanging:
-                        if (TagsChanging != null) TagsChanging(
-                            new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
-                        break;
+                        case NotificationType.RatingChanged:
+                            if (RatingChanged != null) RatingChanged(
+                                new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
+                            break;
 
-                    case NotificationType.RatingChanged:
-                        if (RatingChanged != null) RatingChanged(
-                            new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
-                        break;
+                        case NotificationType.PlayCountersChanged:
+                            if (PlayCountersChanged != null) PlayCountersChanged(
+                                new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
+                            break;
 
-                    case NotificationType.PlayCountersChanged:
-                        if (PlayCountersChanged != null) PlayCountersChanged(
-                            new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
-                        break;
+                        case NotificationType.TagsChanged:
+                            if (TagsChanged != null) TagsChanged(
+                                new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
+                            break;
 
-                    case NotificationType.TagsChanged:
-                        if (TagsChanged != null) TagsChanged(
-                            new NotificationEventArgsImpl(this) { EventType = type, RelatedFilePath = sourceFileUrl });
-                        break;
+                        case NotificationType.VolumeLevelChanged:
+                            if (VolumeLevelChanged != null) VolumeLevelChanged(
+                                new NotificationEventArgsImpl(this) { EventType = type });
+                            break;
 
-                    case NotificationType.VolumeLevelChanged:
-                        if (VolumeLevelChanged != null) VolumeLevelChanged(
-                            new NotificationEventArgsImpl(this) { EventType = type });
-                        break;
-
-                    case NotificationType.VolumeMuteChanged:
-                        if (VolumeMuteChanged != null) VolumeMuteChanged(
-                            new NotificationEventArgsImpl(this) { EventType = type });
-                        break;
+                        case NotificationType.VolumeMuteChanged:
+                            if (VolumeMuteChanged != null) VolumeMuteChanged(
+                                new NotificationEventArgsImpl(this) { EventType = type });
+                            break;
+                    }
+                } finally {
+                    ScrubCache();
                 }
             }
 
@@ -293,15 +297,15 @@ namespace MusicBeePlugin
             #region Library and NowPlayingList Commands
 
             public IFileInfo CurrentlyPlaying {
-                get { return new FileInfo(mbApiInterface, mbApiInterface.NowPlaying_GetFileUrl()); }
+                get { return GetCachedFileInfo(mbApiInterface.NowPlaying_GetFileUrl()); }
             }
 
             public IFileInfo GetFileInfo(string localPath) {
-                return new FileInfo(mbApiInterface, localPath);
+                return GetCachedFileInfo(localPath);
             }
 
             public IFileInfo GetFileInfo(Uri uri) {
-                return new FileInfo(mbApiInterface, uri.OriginalString);
+                return GetCachedFileInfo(uri.OriginalString);
             }
 
             public void PlayNow(Uri file) { mbApiInterface.NowPlayingList_PlayNow(file.LocalPath); }
@@ -334,10 +338,33 @@ namespace MusicBeePlugin
                 if (mbApiInterface.NowPlayingList_QueryFiles(null)) {
                     string file;
                     while ((file = mbApiInterface.NowPlayingList_QueryGetNextFile()) != null) {
-                        res.Add(new FileInfo(mbApiInterface, file));
+                        res.Add(GetCachedFileInfo(file));
                     }
                 }
                 return res;
+            }
+
+            #endregion
+
+            // ..................................................................
+
+            #region Internal Caches
+
+            private Dictionary<string, FileInfo> fileCache = new Dictionary<string, FileInfo>();
+
+            private FileInfo GetCachedFileInfo(string file) {
+                lock (fileCache) {
+                    FileInfo info;
+                    if (!fileCache.TryGetValue(file, out info)) {
+                        info = new FileInfo(this, file);
+                        fileCache.Add(file, info);
+                    }
+                    return info;
+                }
+            }
+
+            private void ScrubCache() {
+                fileCache.Clear();
             }
 
             #endregion
@@ -364,7 +391,7 @@ namespace MusicBeePlugin
                 public IFileInfo RelatedFile { get; set; }
                 public string RelatedFilePath {
                     get { return RelatedFile.ToString(); }
-                    set { RelatedFile = value == null ? null : new FileInfo(Owner.mbApiInterface, value); }
+                    set { RelatedFile = value == null ? null : Owner.GetCachedFileInfo(value); }
                 }
             }
 
