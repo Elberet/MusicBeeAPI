@@ -150,11 +150,6 @@ namespace MusicBeePlugin
         #region UI and Configuration
 
         /// <summary>
-        /// Gets the MusicBee release string.
-        /// </summary>
-        String MusicBeeRelease { get; }
-
-        /// <summary>
         /// Gets the Form representing MusicBee's main window.
         /// </summary>
         Form MainWindow { get; }

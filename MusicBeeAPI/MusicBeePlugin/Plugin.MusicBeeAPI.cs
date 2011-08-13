@@ -173,8 +173,6 @@ namespace MusicBeePlugin
 
             #region UI and Miscellaneous
 
-            public String MusicBeeRelease { get { return "MusicBee"; } }
-
             public Form MainWindow { get { return mbMainForm; } }
 
             public void Invoke(Delegate callback) { mbMainForm.Invoke(callback); }
