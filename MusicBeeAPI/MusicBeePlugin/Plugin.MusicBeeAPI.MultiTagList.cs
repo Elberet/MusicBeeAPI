@@ -20,8 +20,12 @@ namespace MusicBeePlugin
                     public MultiTagList(FileInfo file, MetaDataType tagType) {
                         this.file = file;
                         this.tagType = tagType;
-                        string tag = file.mb.Library_GetFileTag(file.ToString(), tagType);
-                        list = new List<string>(tag.Split(new char[] { '\0' }));
+                        string tag = file.MB.Library_GetFileTag(file.ToString(), tagType);
+                        if (tag.Equals("")) {
+                            list = new List<string>();
+                        } else {
+                            list = new List<string>(tag.TrimEnd('\0').Split('\0'));
+                        }
                         isDirty = false;
                     }
 
@@ -29,11 +33,13 @@ namespace MusicBeePlugin
                         if (isDirty) {
                             string tag;
                             if (list.Count > 0) {
-                                tag = String.Join("\0", list.ToArray());
+                                tag = String.Join("\0", list.ToArray()) + "\0";
                             } else {
                                 tag = "";
                             }
-                            file.mb.Library_SetFileTag(file.ToString(), tagType, tag);
+                            if (!file.MB.Library_SetFileTag(file.ToString(), tagType, tag)) {
+                                throw new InvalidOperationException("could not set "+tagType+" list");
+                            }
                             isDirty = false;
                         }
                     }

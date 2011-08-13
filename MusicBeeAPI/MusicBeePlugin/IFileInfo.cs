@@ -34,7 +34,7 @@ namespace MusicBeePlugin
         /// <summary>
         /// Store any changed values in the MusicBee library and/or the file's embedded tags.
         /// </summary>
-        void CommitTags();
+        bool CommitTags();
 
         /// <summary>
         /// Retrieves the main album cover artwork associated with the file.
@@ -115,8 +115,8 @@ namespace MusicBeePlugin
         string Origin { get; set; }
         string Publisher { get; set; }
         string Quality { get; set; }
-        string Rating { get; set; }
-        string RatingAlbum { get; set; }
+        float? Rating { get; set; }
+        float? RatingAlbum { get; set; }
         string RatingLove { get; set; }
         string TrackCount { get; set; }
         string TrackNo { get; set; }

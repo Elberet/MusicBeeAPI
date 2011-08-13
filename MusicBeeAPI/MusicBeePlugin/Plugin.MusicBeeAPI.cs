@@ -291,15 +291,15 @@ namespace MusicBeePlugin
             #region Library and NowPlayingList Commands
 
             public IFileInfo CurrentlyPlaying {
-                get { return new FileInfo(mbApiInterface, mbApiInterface.NowPlaying_GetFileUrl()); }
+                get { return new FileInfo(this, mbApiInterface.NowPlaying_GetFileUrl()); }
             }
 
             public IFileInfo GetFileInfo(string localPath) {
-                return new FileInfo(mbApiInterface, localPath);
+                return new FileInfo(this, localPath);
             }
 
             public IFileInfo GetFileInfo(Uri uri) {
-                return new FileInfo(mbApiInterface, uri.OriginalString);
+                return new FileInfo(this, uri.OriginalString);
             }
 
             public void PlayNow(Uri file) { mbApiInterface.NowPlayingList_PlayNow(file.LocalPath); }
@@ -332,7 +332,7 @@ namespace MusicBeePlugin
                 if (mbApiInterface.NowPlayingList_QueryFiles(null)) {
                     string file;
                     while ((file = mbApiInterface.NowPlayingList_QueryGetNextFile()) != null) {
-                        res.Add(new FileInfo(mbApiInterface, file));
+                        res.Add(new FileInfo(this, file));
                     }
                 }
                 return res;
@@ -362,7 +362,7 @@ namespace MusicBeePlugin
                 public IFileInfo RelatedFile { get; set; }
                 public string RelatedFilePath {
                     get { return RelatedFile.ToString(); }
-                    set { RelatedFile = value == null ? null : new FileInfo(Owner.mbApiInterface, value); }
+                    set { RelatedFile = value == null ? null : new FileInfo(Owner, value); }
                 }
             }
 
